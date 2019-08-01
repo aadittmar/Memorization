@@ -1,6 +1,15 @@
 import os
 
 def add_verses_to_dict():
+    # Put dictionaries of all chapter's verses into main chapters dictionary
+    romans_chapters_dict[1] = romans_1_dict
+    romans_chapters_dict[2] = romans_2_dict
+    romans_chapters_dict[3] = romans_3_dict
+    romans_chapters_dict[4] = romans_4_dict
+    romans_chapters_dict[5] = romans_5_dict
+    romans_chapters_dict[6] = romans_6_dict
+    romans_chapters_dict[7] = romans_7_dict
+
 
     # Set up Romans 1 Dictionary for all verses
     romans_1_dict[ 1 ] = "Paul, a servant of Christ Jesus, called to be an apostle and set apart for the gospel of God—"
@@ -16,62 +25,107 @@ def add_verses_to_dict():
 
     return
 
-def select_verse():
+def option_menu():
+    print("\nOptions:")
+    print("   [1]: Memorize Individual Verses")
+    print("   [2]: Entire Quiz\n")
+    option = int(input("Choose an option (1 or 2):"))
 
-    count = 0 #Count how many times the user has gotten the verse right. Do something after 10 correct times?
-
-    try:
-        verse_num = int(input("What verse are you trying to memorize? "))
-    except:
-        verse_num = "unknown"
-
-
-    if verse_num in romans_1_dict.keys():
-        selected_verse = romans_1_dict[verse_num]
-    else:
-        print("\nThat is not a valid verse, please try again.\n")
-        selected_verse = "unknown"
+    if option == 1:
         select_verse()
 
-    check_answer(selected_verse, count)
+def select_verse():
+    chapter        = 0
+    verse          = 0
+    selected_verse = ""
+
+    try:
+        chapter_verse = input("\nWhat chapter and verse are you trying to memorize (1:1, menu)? ")
+
+        if "menu" in chapter_verse:
+            option_menu()
+        else:
+            chapter = int(chapter_verse.split(":")[0])
+            verse   = int(chapter_verse.split(":")[1])
+
+    except:
+        chapter_verse = 0
+        chapter       = 0
+        verse         = 0
+
+    # check to see if chapter exists in romans_chapters_dict
+    if chapter in romans_chapters_dict.keys():
+
+        # check to see if verse exists in specific chapter dictionary
+        if verse in romans_chapters_dict[chapter].keys():
+            selected_verse = romans_chapters_dict[chapter][verse]
+        else:
+            print("\nThat is not a valid verse, please try again.\n")
+            selected_verse = "unknown"
+            select_verse()
+
+    check_answer(selected_verse)
 
     return
 
-def check_answer(selected_verse, count):
+def select_entire_chapter():
+    # TODO: Make this!
+    pass
 
-    user_answer = input("Print verse: ")
+def check_answer(selected_verse):
+
+    # count how many times the user gets the verse right. After (10) times the program goes back to the menu.
+    count = 0
+    user_answer = input("\nPrint verse: ")
 
     while user_answer == selected_verse:
         count += 1
 
-        # Try to clear the screen. Only works on windows terminal right now.
-        try:
-            clear()
-        except:    
-            pass
+        if count >= 10:
+            print("\nCongrats, you got it ", count, " times in a row!")
+            option_menu()
 
-        print("Correct ", count, " time")
+        else:
 
-        # ask the user to enter the verse again if they got it right the previous time.
-        user_answer = input("Print again: ")
+            # Try to clear the screen. Only works on windows terminal right now.
+            try:
+                clear()
+            except:    
+                pass
 
-    else:
-        print("\nIncorrect. Correct answer is: ", selected_verse, "\n")
-        select_verse()
+            if count < 2:
+                print("\nCorrect [", count, "] time")
+            else:
+                print("\nCorrect [", count, "] times")
+
+            # ask the user to enter the verse again if they got it right the previous time.
+            user_answer = input("\nPrint again: ")
+
+    print("\nIncorrect. Correct answer is: ", selected_verse, "\n")
+    select_verse()
 
     return
 
 ### START OF PROGRAM ###
-print("This is a memorization tool for the NIV 2001 translation of the Bible.\n")
-
 # setup 'clear' command. Only works on Windows right now.
+print("\nThis is a memorization tool for the NIV [2001] translation of the Bible.")
+
+# Setup the clear screen variable. Only works on Windows right now.
 try:
     clear = lambda: os.system('cls')
 except:
     pass
 
-romans_1_dict = {}
+# Create dictionaries for holding all verses
+romans_chapters_dict= {}
+romans_1_dict       = {}
+romans_2_dict       = {}
+romans_3_dict       = {}
+romans_4_dict       = {}
+romans_5_dict       = {}
+romans_6_dict       = {}
+romans_7_dict       = {}
 add_verses_to_dict()
 
-while True:
-    select_verse()
+# go to the menu to select different options
+option_menu()
