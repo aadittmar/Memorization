@@ -1,6 +1,8 @@
 import os
 
 def add_verses_to_dict():
+
+    # Set up Romans 1 Dictionary for all verses
     romans_1_dict[ 1 ] = "Paul, a servant of Christ Jesus, called to be an apostle and set apart for the gospel of God—"
     romans_1_dict[ 2 ] = "the gospel he promised beforehand through his prophets in the Holy Scriptures"
     romans_1_dict[ 3 ] = "regarding his Son, who as to his earthly life[a] was a descendant of David, "
@@ -15,11 +17,21 @@ def add_verses_to_dict():
     return
 
 def select_verse():
-    count = 0
-    print("This is a memorization tool for the NIV 2001 translation of the Bible.\n")
-    verse_num = int(input("What verse are you trying to memorize? "))
 
-    selected_verse = romans_1_dict[verse_num]
+    count = 0 #Count how many times the user has gotten the verse right. Do something after 10 correct times?
+
+    try:
+        verse_num = int(input("What verse are you trying to memorize? "))
+    except:
+        verse_num = "unknown"
+
+
+    if verse_num in romans_1_dict.keys():
+        selected_verse = romans_1_dict[verse_num]
+    else:
+        print("\nThat is not a valid verse, please try again.\n")
+        selected_verse = "unknown"
+        select_verse()
 
     check_answer(selected_verse, count)
 
@@ -31,20 +43,41 @@ def check_answer(selected_verse, count):
 
     while user_answer == selected_verse:
         count += 1
-        clear()
+
+        # Try to clear the screen. Only works on windows terminal right now.
+        try:
+            clear()
+        except:    
+            pass
+
         print("Correct ", count, " time")
+
+        # ask the user to enter the verse again if they got it right the previous time.
         user_answer = input("Print again: ")
 
     else:
-        print("Incorrect. Correct answer is: ", selected_verse)
+        print("\nIncorrect. Correct answer is: ", selected_verse, "\n")
+        select_verse()
 
     return
 
+### START OF PROGRAM ###
+print("This is a memorization tool for the NIV 2001 translation of the Bible.\n")
 
-clear = lambda: os.system('cls')
+# setup 'clear' command. Only works on Windows right now.
+try:
+    clear = lambda: os.system('cls')
+except:
+    pass
+
 romans_1_dict = {}
 add_verses_to_dict()
 
 while True:
-    clear()
+
+    try:
+        clear()
+    except:
+        pass
+
     select_verse()
