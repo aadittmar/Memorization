@@ -74,10 +74,4 @@ romans_1_dict = {}
 add_verses_to_dict()
 
 while True:
-
-    try:
-        clear()
-    except:
-        pass
-
     select_verse()
