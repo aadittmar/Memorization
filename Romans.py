@@ -1,4 +1,5 @@
 import os
+import sys
 
 def add_verses_to_dict():
     # Put dictionaries of all chapter's verses into main chapters dictionary
@@ -88,10 +89,12 @@ def check_answer(selected_verse):
         else:
 
             # Try to clear the screen. Only works on windows terminal right now.
+
             try:
-                clear()
-            except:    
-                pass
+                clear
+            except:
+                print("Clearing the screen did not work.")
+            
 
             if count < 2:
                 print("\nCorrect [", count, "] time")
@@ -107,14 +110,23 @@ def check_answer(selected_verse):
     return
 
 ### START OF PROGRAM ###
+
 # setup 'clear' command. Only works on Windows right now.
 print("\nThis is a memorization tool for the NIV [2001] translation of the Bible.")
 
+# Get the system type
+system_type = str(sys.platform)
+
+if system_type == "darwin":
+    system_type = "OSX"
+if system_type == "win32":
+    system_type = "Windows"
+
 # Setup the clear screen variable. Only works on Windows right now.
-try:
+if system_type == "OSX":
+    clear = lambda: os.system('clear')
+elif system_type == "Windows":
     clear = lambda: os.system('cls')
-except:
-    pass
 
 # Create dictionaries for holding all verses
 romans_chapters_dict= {}
